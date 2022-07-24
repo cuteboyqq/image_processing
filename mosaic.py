@@ -512,27 +512,35 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
     return img, ratio, (dw, dh)
         
 if __name__=="__main__":
-    path = r"C:\bdd100k_supersmall_WPI\images\train"
+    path = r"C:\YOLOV4-TF\Factory_data\factory_data\images\train"
     print('Start data preprocess')
+    save_dir = r"C:\YOLOV4-TF\mosaic_result"
     data_process = LoadImagesAndLabels(path,img_size=640,mosaic=True)
     SHOW_GET_ITEMS = True
+    SAVE_ALL_MOSAICS = True
     import scipy.misc
     import cv2
     import imageio
     if SHOW_GET_ITEMS:
-        for i in range(10):
+        if SAVE_ALL_MOSAICS:
+            length = len(data_process)
+        else:
+            length = 20
+        for i in range(length):
             img, labels_out, img_files = data_process[i]
             
             
             #scipy.misc.imsave('outfile-2022-07-24.jpg', img)
             #img = img.numpy()
-            file_path = str(i) + '.jpg'
-            imageio.imwrite(file_path, img)
+            file_name = str(i) + '.jpg'
+            save_img_path = os.path.join(save_dir,file_name)
+            imageio.imwrite(save_img_path, img)
             #cv2.imwrite('D:/settings/set/twitter/mosaic-20220724.jpg',img)
             #labels_out = labels_out.numpy()
             num_bb = len(labels_out)
             new_l_list = [0,0,0,0,0]
-            txt_path = str(i) + '.txt'
+            txt_file = str(i) + '.txt'
+            txt_path = os.path.join(save_dir,txt_file)
             line = []
             with open(txt_path,'w')as final_f:
                 print('labels_out line by line')
